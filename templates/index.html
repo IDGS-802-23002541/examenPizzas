@@ -1,17 +1,88 @@
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link
-      rel="stylesheet"
-      href="{{url_for('static',filename='dist/output.css')}}"
-    />
-    <title>Pizzería</title>
-  </head>
-  <body>
-    <h1>Funciona Flowbite Flask</h1>
-    <script src="https://cdn.jsdelivr.net/npm/flowbite@4.0.1/dist/flowbite.min.js"></script>
-  </body>
-</html>
+{% extends "layout.html" %} {% block title %}— Bienvenido{% endblock %} {% block
+content %}
+
+<div class="max-h-[200vh] flex items-center justify-center py-100">
+  <div class="flex flex-col items-center gap-10">
+    <div class="text-center">
+      <h1 class="sign-text text-4xl mb-2">PIZZA ROBLOXIANA</h1>
+      <p class="font-roblox text-lg text-white mb-10 tracking-wide">
+        ¡Bienvenido al sistema de pedidos!
+      </p>
+
+      <div class="flex gap-4 justify-center flex-wrap">
+        <a
+          href="{{ url_for('pedidos.nuevoPedido') }}"
+          class="font-roblox text-xl text-cream bg-red border-4 border-brown px-8 py-4 no-underline tracking-wide hover:bg-reddk active:translate-x-[2px] active:translate-y-[2px] transition-all duration-75"
+          style="box-shadow: var(--shadow-sign); text-shadow: 1px 1px 0 #1a0a00"
+        >
+          🛒 NUEVO PEDIDO
+        </a>
+        <a
+          href="{{ url_for('pedidos.pedidos') }}"
+          class="font-roblox text-xl text-brown bg-sign border-4 border-brown px-8 py-4 no-underline tracking-wide hover:bg-signdk active:translate-x-[2px] active:translate-y-[2px] transition-all duration-75"
+          style="box-shadow: var(--shadow-sign)"
+        >
+          📋 VER PEDIDOS
+        </a>
+      </div>
+    </div>
+    <div class="flex flex-row">
+      <div
+        class="border-4 border-brown overflow-hidden"
+        style="box-shadow: var(--shadow-card)"
+      >
+        <div
+          class="checkered px-5 py-3 border-b-4 border-brown flex justify-between items-center"
+        >
+          <span
+            class="font-roblox text-sm text-brown bg-cream px-3 py-1 border-2 border-brown"
+            style="box-shadow: 2px 2px 0 #3e1f0e"
+          >
+            VENTAS — DÍA
+          </span>
+        </div>
+
+        <div class="bg-panel p-5">
+          <!-- Total del día -->
+          <div
+            class="flex justify-end pt-4 border-t-4 border-dashed border-brownlt"
+          >
+            <div class="text-right">
+              <div class="font-roblox text-sm text-brownlt mb-2 uppercase">
+                Ventas totales del día
+              </div>
+              <div
+                class="font-roblox text-2xl bg-sign text-brown border-4 border-brown px-5 py-3 inline-block"
+                style="box-shadow: var(--shadow-sign)"
+              >
+                ${{ total_dia|int }}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-panel p-5">
+          <!-- Total del mes -->
+          <div
+            class="flex justify-end pt-4 border-t-4 border-dashed border-brownlt"
+          >
+            <div class="text-right">
+              <div class="font-roblox text-sm text-brownlt mb-2 uppercase">
+                Ventas totales del mes
+              </div>
+              <div
+                class="font-roblox text-2xl bg-sign text-brown border-4 border-brown px-5 py-3 inline-block"
+                style="box-shadow: var(--shadow-sign)"
+              >
+                ${{ total_mes|int }}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    {% endblock %}
+  </div>
+  </div>
+</div>

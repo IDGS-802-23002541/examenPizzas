@@ -1,0 +1,228 @@
+{% extends 'layout.html' %}
+{% block title %}|Nuevo Pedido{% endblock %}
+{% import "_macros.html" as
+macros %}
+
+{% block content %}
+
+<div class="text-center mb-6">
+  <h1 class="sign-text text-2xl inline-block
+              bg-brown px-4 py-4 border-4 border-sign"
+      style="box-shadow: 5px 5px 0 #1a0a00">
+    NUEVO PEDIDO
+  </h1>
+</div>
+
+<form method="POST">
+  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+  {{cliente_form.csrf_token}}
+  <!-- Cliente -->
+  <div class="bg-panel border-4 border-brown mb-5 overflow-hidden"
+       style="box-shadow: var(--shadow-card)">
+    <div class="bg-brownlt px-5 py-3 border-b-4 border-brown flex items-center gap-2">
+      <span class="font-roblox text-sm text-cream"
+            style="text-shadow:1px 1px 0 #1a0a00">DATOS DEL CLIENTE</span>
+    </div>
+    <div class="p-5 flex flex-wrap gap-3">
+      <div class="flex flex-col gap-1 flex-[2] min-w-[160px]">
+        {{ macros.campoNuevo(cliente_form.nombre,
+           class='bg-cream border-[3px] border-brownlt text-dark font-fredoka text-lg
+                  px-3 py-2 outline-none focus:border-red w-full') }}
+      </div>
+      <div class="flex flex-col gap-1 flex-[2] min-w-[160px]">
+        {{ macros.campoNuevo(cliente_form.direccion,
+           class='bg-cream border-[3px] border-brownlt text-dark font-fredoka text-lg
+                  px-3 py-2 outline-none focus:border-red w-full') }}
+      </div>
+      <div class="flex flex-col gap-1 min-w-[140px]">
+        {{ macros.campoNuevo(cliente_form.telefono,
+           class='bg-cream border-[3px] border-brownlt text-dark font-fredoka text-lg
+                  px-3 py-2 outline-none focus:border-red w-full') }}
+      <div class="flex flex-col gap-1 min-w-[160px]">
+        <label class="font-roblox text-sm text-brownlt uppercase">Fecha del pedido</label>
+        <input name="fecha" type="date" value="{{ today }}"
+               class="bg-cream border-[3px] border-brownlt text-dark font-fredoka text-lg
+                      px-3 py-2 outline-none focus:border-red rounded-none w-full">
+      </div>
+    </div>
+  </div>
+
+  <!-- Pizza -->
+  <div class="bg-panel border-4 border-brown mb-5 overflow-hidden"
+       style="box-shadow: var(--shadow-card)">
+    <div class="bg-brownlt px-5 py-3 border-b-4 border-brown flex items-center gap-2">
+      <span class="font-roblox text-sm text-cream"
+            style="text-shadow:1px 1px 0 #1a0a00">ARMAR PIZZA</span>
+    </div>
+    <div class="p-5">
+
+      <!-- Tamaño -->
+      <p class="font-roblox text-xs text-brownlt uppercase mb-3">Elige el tamaño</p>
+      <div class="flex gap-3 flex-wrap mb-5">
+ 
+        {% for tamanio, precio in [('Chica',40), ('Mediana',80), ('Grande',120)] %}
+        <input class="pizza-opt" type="radio" name="tamanio"
+               id="tam_{{ tamanio }}" value="{{ tamanio }}" {{ 'checked' if loop.first }}>
+        <label for="tam_{{ tamanio }}"
+               class="pizza-lbl flex flex-col items-center gap-2 px-5 py-3
+                      border-[3px] border-brownlt cursor-pointer bg-creamdk
+                      hover:border-sign hover:-translate-y-px
+                      min-w-[110px] text-center transition-all duration-75"
+               style="box-shadow: 3px 3px 0 #3e1f0e">
+          <span class="font-roblox text-xs text-brown">{{ tamanio }}</span>
+          <span class="font-fredoka text-xl font-bold text-red">${{ precio }}</span>
+        </label>
+        {% endfor %}
+
+      <!-- Ingredientes extra -->
+      <p class="font-roblox text-sm text-brownlt uppercase mb-3">Ingredientes extra (+$10 c/u)</p>
+      <div class="flex flex-wrap gap-2 mb-5">
+        {% for ing in ['Jamón','Piña','Champiñones'] %}
+        <input class="ing-cb" type="checkbox" name="extra_ing"
+               id="ing_{{ loop.index }}" value="{{ ing }}">
+        <label for="ing_{{ loop.index }}"
+               class="ing-lbl px-3 py-2 border-2 border-brownlt cursor-pointer
+                      font-fredoka text-base bg-creamdk text-brown
+                      hover:border-greens transition-all duration-75"
+               style="box-shadow: 2px 2px 0 #3e1f0e">
+          {{ ing }} <span class="text-greens font-bold">+$10</span>
+        </label>
+        {% endfor %}
+      </div>
+
+      <!-- Cantidad + Agregar -->
+      <div class="flex items-end gap-3 flex-wrap">
+        <div class="flex flex-col gap-1">
+          <label class="font-roblox text-sm text-brownlt uppercase">Núm. de pizzas</label>
+          <input name="cantidad" type="number" value="1" min="1" max="99"
+                 class="bg-cream border-[3px] border-brownlt text-dark font-fredoka text-xl
+                        px-3 py-2 outline-none focus:border-red rounded-none w-24 text-center">
+        </div>
+        <button type="submit" name="action" value="agregar"
+                class="font-roblox text-sm bg-greens text-cream border-[3px] border-brown
+                       px-5 py-3 cursor-pointer hover:bg-dark
+                       active:translate-x-[2px] active:translate-y-[2px] transition-all duration-75"
+                style="box-shadow: var(--shadow-btn); text-shadow:1px 1px 0 #1a0a00">
+          ➕ AGREGAR
+        </button>
+      </div>
+    </div>
+  </div>
+
+</form>
+
+<!-- ══ Detalle Pedido ══ -->
+<div class="border-4 border-brown overflow-hidden"
+     style="box-shadow: var(--shadow-card)">
+
+  <div class="checkered px-5 py-3 border-b-4 border-brown flex justify-between items-center">
+    <span class="font-roblox text-sm text-brown bg-cream px-3 py-1 border-2 border-brown"
+          style="box-shadow:2px 2px 0 #3e1f0e">
+      DETALLE DEL PEDIDO
+    </span>
+    {% if carrito %}
+    <span class="font-roblox text-sm bg-sign text-brown border-2 border-brown px-2 py-1"
+          style="box-shadow:2px 2px 0 #3e1f0e">
+      {{ carrito|length }} item(s)
+    </span>
+    {% endif %}
+  </div>
+
+  <div class="bg-panel p-5">
+    {% if carrito %}
+    <div class="overflow-x-auto mb-4">
+      <table class="w-full font-fredoka text-base border-collapse">
+        <thead>
+          <tr>
+            {% for col in ['#','TAMAÑO','INGREDIENTES','CANT.','SUBTOTAL',''] %}
+            <th class="font-roblox text-sm text-cream text-left px-3 py-2
+                       bg-brownlt border-2 border-brown">{{ col }}</th>
+            {% endfor %}
+          </tr>
+        </thead>
+        <tbody>
+          {% for item in carrito %}
+          <tr class="{{ 'bg-creamdk' if loop.index is even else 'bg-panel' }} hover:bg-paneldk">
+            <td class="px-3 py-2 border border-paneldk text-center font-bold">{{ loop.index }}</td>
+            <td class="px-3 py-2 border border-paneldk">
+              <span class="font-roblox text-xs bg-red text-cream border-2 border-brown px-2 py-1">
+                {{ item.pizza.tamanio }}
+              </span>
+            </td>
+            <td class="px-3 py-2 border border-paneldk text-brownlt text-sm">{{ item.pizza.ingredientes }}</td>
+            <td class="px-3 py-2 border border-paneldk text-center font-bold">{{ item.cantidad }}</td>
+            <td class="px-3 py-2 border border-paneldk text-red font-bold text-lg">${{ item.subtotal|int }}</td>
+            <td class="px-3 py-2 border border-paneldk">
+              <form method="POST" style="display:inline">
+                <input type="hidden" name="action" value="quitar">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+                <input type="hidden" name="detalle_id" value="{{ item.id }}">
+                <button type="submit"
+                        class="font-roblox text-xs bg-red text-cream border-2 border-brown
+                               px-2 py-1 cursor-pointer hover:bg-reddk
+                               active:translate-x-[1px] active:translate-y-[1px]"
+                        style="box-shadow: var(--shadow-btsm)">
+                  🗑
+                </button>
+              </form>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Total + Terminar -->
+    <div class="flex justify-between items-center flex-wrap gap-4
+                pt-4 border-t-4 border-dashed border-brownlt">
+      <div class="font-roblox text-xl bg-sign text-brown
+                  border-4 border-brown px-5 py-3"
+           style="box-shadow: var(--shadow-sign); text-shadow: 1px 1px 0 rgba(0,0,0,0.2)">
+        TOTAL: ${{ total_carrito|int }}
+      </div>
+      <form method="POST">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+        {{cliente_form.csrf_token}}
+        <input type="hidden" name="action"    value="terminar">
+        <input type="hidden" name="nombre"    id="h_nombre">
+        <input type="hidden" name="direccion" id="h_dir">
+        <input type="hidden" name="telefono"  id="h_tel">
+        <input type="hidden" name="fecha"     id="h_fecha">
+        <button type="submit" onclick="copyClient(event)"
+                class="font-roblox text-sm bg-red text-cream
+                       border-4 border-brown px-6 py-3 cursor-pointer
+                       hover:bg-reddk active:translate-x-[2px] active:translate-y-[2px]"
+                style="box-shadow: var(--shadow-sign); text-shadow:1px 1px 0 #1a0a00">
+          ✅ TERMINAR PEDIDO
+        </button>
+      </form>
+    </div>
+
+    {% else %}
+    <div class="text-center py-12">
+      <div class="text-6xl mb-4">🍕</div>
+      <p class="font-roblox text-sm text-brownlt">El carrito está vacío.<br><br>¡Agrega una pizza!</p>
+    </div>
+    {% endif %}
+  </div>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+function copyClient(e) {
+  document.getElementById('h_nombre').value = document.querySelector('[name="nombre"]').value;
+  document.getElementById('h_dir').value    = document.querySelector('[name="direccion"]').value;
+  document.getElementById('h_tel').value    = document.querySelector('[name="telefono"]').value;
+  document.getElementById('h_fecha').value  = document.querySelector('[name="fecha"]').value;
+}
+['nombre','direccion','telefono','fecha'].forEach(f => {
+  const el = document.querySelector(`[name="${f}"]`);
+  if (!el) return;
+  const v = sessionStorage.getItem('pz_'+f);
+  if (v) el.value = v;
+  el.addEventListener('input', () => sessionStorage.setItem('pz_'+f, el.value));
+});
+</script>
+{% endblock %}

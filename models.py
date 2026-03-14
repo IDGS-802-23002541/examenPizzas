@@ -57,12 +57,13 @@ class DetallePedido(db.Model):
     id_pedido=db.Column(
         db.Integer,
         db.ForeignKey('pedido.id'),
-        nullable=False
+        nullable=True
     )
     id_pizza=db.Column(
         db.Integer,
         db.ForeignKey('pizza.id'),
         nullable=False
     )
+    pizza = db.relationship('Pizza')
     cantidad=db.Column(db.Integer, default=1)
     subtotal=db.Column(db.Float)

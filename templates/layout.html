@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>🍕 Pizza Robloxiana {% block title %}{% endblock %}</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='dist/output.css') }}"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Nunito:wght@900&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body class="min-h-screen font-fredoka text-dark">
+    <nav
+      class="bg-red border-b-4 border-brown sticky top-0 z-50"
+      style="box-shadow: 0 4px 0 #3e1f0e"
+    >
+      <div class="max-w-6xl mx-auto flex items-stretch">
+        <a
+          href="/"
+          class="font-roblox text-2xl text-sign px-6 py-4 bg-reddk border-r-4 border-brown flex items-center gap-3 no-underline tracking-wide"
+          style="
+            text-shadow: 2px 2px 0 #3e1f0e;
+            -webkit-text-stroke: 1px #3e1f0e;
+          "
+        >
+          <span class="text-3xl">🍕</span>
+          PIZZA ROBLOXIANA
+        </a>
+
+        <ul class="flex list-none m-0 p-0">
+          <li>
+            <a
+              href="{{ url_for('pedidos.nuevoPedido') }}"
+              class="font-roblox text-base text-cream px-6 py-5 block border-r border-brown/40 no-underline tracking-wide hover:bg-brown/30 hover:text-sign transition-colors duration-75"
+              style="text-shadow: 1px 1px 0 #3e1f0e"
+            >
+              NUEVO PEDIDO
+            </a>
+          </li>
+          <li>
+            <a
+              href="{{ url_for('pedidos.pedidos') }}"
+              class="font-roblox text-base text-cream px-6 py-5 block border-r border-brown/40 no-underline tracking-wide hover:bg-brown/30 hover:text-sign transition-colors duration-75"
+              style="text-shadow: 1px 1px 0 #3e1f0e"
+            >
+              PEDIDOS
+            </a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+
+    <!-- FLASH MESSAGES -->
+    {% with messages = get_flashed_messages(with_categories=true) %} {% if
+    messages %}
+    <div class="max-w-6xl mx-auto px-4 pt-3">
+      {% for cat, msg in messages %}
+      <div
+        class="flash-in font-roblox text-base px-4 py-3 border-4 border-brown mb-2 flex items-center gap-3 {% if cat == 'success' %}bg-greens text-cream{% elif cat == 'error' %}bg-red text-cream{% else %}bg-sign text-brown{% endif %}"
+        style="box-shadow: 3px 3px 0 #3e1f0e"
+      >
+        {{ '✅' if cat=='success' else '❌' if cat=='error' else 'ℹ️' }} {{ msg
+        }}
+      </div>
+      {% endfor %}
+    </div>
+    {% endif %} {% endwith %}
+
+    <div class="max-w-6xl mx-auto px-4 py-6">
+      {% block content %}{% endblock %}
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/flowbite@4.0.1/dist/flowbite.min.js"></script>
+    {% block scripts %}{% endblock %}
+  </body>
+</html>

@@ -1,0 +1,167 @@
+{% extends 'layout.html' %} {% block title %}— Pedidos{% endblock %} {% block
+content %}{% import "_macros.html" as macros %}
+
+<div class="text-center mb-6">
+  <h1
+    class="sign-text text-2xl inline-block bg-brown px-4 py-4 border-4 border-sign"
+    style="box-shadow: 5px 5px 0 #1a0a00"
+  >
+    PEDIDOS DEL DÍA
+  </h1>
+</div>
+
+<div
+  class="bg-panel border-4 border-brown mb-5 overflow-hidden"
+  style="box-shadow: var(--shadow-card)"
+>
+  <div
+    class="bg-brownlt px-5 py-3 border-b-4 border-brown flex items-center gap-2"
+  >
+    <span
+      class="font-roblox text-sm text-cream"
+      style="text-shadow: 1px 1px 0 #1a0a00"
+      >FILTRAR POR FECHA</span
+    >
+  </div>
+  <div class="p-5">
+    <form method="GET" class="flex gap-3 items-end flex-wrap">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+      {{ form.csrf_token }}
+      <div class="flex flex-col gap-1">
+        <label class="font-roblox text-sm text-brownlt uppercase">Fecha</label>
+        <input
+          name="fecha"
+          type="date"
+          value="{{ fecha }}"
+          class="bg-cream border-[3px] border-brownlt text-dark font-fredoka text-lg px-3 py-2 outline-none focus:border-red rounded-none"
+        />
+      </div>
+      <button
+        type="submit"
+        class="font-roblox text-sm bg-red text-cream border-[3px] border-brown px-4 py-3 cursor-pointer hover:bg-reddk active:translate-x-[1px] active:translate-y-[1px]"
+        style="box-shadow: var(--shadow-btn); text-shadow: 1px 1px 0 #1a0a00"
+      >
+        🔍 BUSCAR
+      </button>
+      <a
+        href="{{ url_for('pedidos.pedidos') }}"
+        class="font-roblox text-sm bg-sign text-brown border-[3px] border-brown px-4 py-3 no-underline hover:bg-signdk active:translate-x-[1px] active:translate-y-[1px]"
+        style="box-shadow: var(--shadow-btn)"
+      >
+        HOY
+      </a>
+    </form>
+  </div>
+</div>
+
+<!-- ══ Pedidos ══ -->
+<div
+  class="border-4 border-brown overflow-hidden"
+  style="box-shadow: var(--shadow-card)"
+>
+  <div
+    class="checkered px-5 py-3 border-b-4 border-brown flex justify-between items-center"
+  >
+    <span
+      class="font-roblox text-sm text-brown bg-cream px-3 py-1 border-2 border-brown"
+      style="box-shadow: 2px 2px 0 #3e1f0e"
+    >
+      PEDIDOS — {{ fecha }}
+    </span>
+    {% if pedidos %}
+    <span
+      class="font-roblox text-xs bg-sign text-brown border-2 border-brown px-2 py-1"
+      style="box-shadow: 2px 2px 0 #3e1f0e"
+    >
+      {{ pedidos|length }} pedido(s)
+    </span>
+    {% endif %}
+  </div>
+
+  <div class="bg-panel p-5">
+    {% if pedidos %}
+    <div class="overflow-x-auto mb-5">
+      <table class="w-full font-fredoka text-base border-collapse">
+        <thead>
+          <tr>
+            {% for col in
+            ['#ID','CLIENTE','TELÉFONO','DIRECCIÓN','FECHA','TOTAL','VER'] %}
+            <th
+              class="font-roblox text-sm text-cream text-left px-3 py-2 bg-brownlt border-2 border-brown"
+            >
+              {{ col }}
+            </th>
+            {% endfor %}
+          </tr>
+        </thead>
+        <tbody>
+          {% for p in pedidos %}
+          <tr
+            class="{{ 'bg-creamdk' if loop.index is even else 'bg-panel' }} hover:bg-paneldk"
+          >
+            <td class="px-3 py-2 border border-paneldk">
+              <span
+                class="font-roblox text-xs bg-red text-cream border-2 border-brown px-2 py-1"
+              >
+                #{{ p.id }}
+              </span>
+            </td>
+            <td class="px-3 py-2 border border-paneldk font-semibold text-lg">
+              {{ p.cliente.nombre }}
+            </td>
+            <td class="px-3 py-2 border border-paneldk text-brownlt">
+              {{ p.cliente.telefono }}
+            </td>
+            <td class="px-3 py-2 border border-paneldk text-brownlt text-sm">
+              {{ p.cliente.direccion }}
+            </td>
+            <td class="px-3 py-2 border border-paneldk text-sm text-brownlt">
+              {{ p.fecha.strftime('%d/%m/%Y %H:%M') }}
+            </td>
+            <td
+              class="px-3 py-2 border border-paneldk text-red font-bold text-lg"
+            >
+              ${{ p.total|int }}
+            </td>
+            <td class="px-3 py-2 border border-paneldk">
+              <a
+                href="{{ url_for('pedidos.detallePedido', pedido_id=p.id) }}"
+                class="font-roblox text-xs bg-brownlt text-cream border-2 border-brown px-3 py-2 no-underline hover:bg-brown"
+                style="box-shadow: var(--shadow-btsm)"
+              >
+                👁 VER
+              </a>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Total del día -->
+    <div class="flex justify-end pt-4 border-t-4 border-dashed border-brownlt">
+      <div class="text-right">
+        <div class="font-roblox text-sm text-brownlt mb-2 uppercase">
+          Ventas totales del día
+        </div>
+        <div
+          class="font-roblox text-2xl bg-sign text-brown border-4 border-brown px-5 py-3 inline-block"
+          style="box-shadow: var(--shadow-sign)"
+        >
+          ${{ total_dia|int }}
+        </div>
+      </div>
+    </div>
+
+    {% else %}
+    <div class="text-center py-12">
+      <div class="text-6xl mb-4">📭</div>
+      <p class="font-roblox text-sm text-brownlt">
+        No hay pedidos<br /><br />para {{ fecha }}
+      </p>
+    </div>
+    {% endif %}
+  </div>
+</div>
+
+{% endblock %}

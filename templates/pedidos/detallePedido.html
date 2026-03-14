@@ -1,0 +1,139 @@
+{% extends 'layout.html' %} {% block title %}| Pedido #{{ pedido.id }}{%
+endblock %} {% block content %}
+
+<div class="mb-5">
+  <a
+    href="{{ url_for('pedidos.pedidos') }}"
+    class="font-roblox text-sm bg-sign text-brown border-[3px] border-brown px-4 py-2 no-underline hover:bg-signdk"
+    style="box-shadow: var(--shadow-btn)"
+  >
+    ← VOLVER
+  </a>
+</div>
+
+<div
+  class="border-4 border-brown max-w-2xl mx-auto overflow-hidden"
+  style="box-shadow: 7px 7px 0 #1a0a00"
+>
+  <div
+    class="checkered border-b-4 border-brown px-7 py-4 flex justify-between items-center"
+  >
+    <span
+      class="font-roblox text-base text-brown bg-cream px-4 py-2 border-2 border-brown"
+      style="box-shadow: 2px 2px 0 #3e1f0e"
+    >
+      PEDIDO #{{ pedido.id }}
+    </span>
+    <span
+      class="font-roblox text-sm bg-sign text-brown border-2 border-brown px-3 py-1"
+      style="box-shadow: 2px 2px 0 #3e1f0e"
+    >
+      {{ pedido.fecha.strftime('%d/%m/%Y') }}
+    </span>
+  </div>
+
+  <div class="bg-panel p-7">
+    <!-- Datos del cliente -->
+    <p class="font-roblox text-sm text-brownlt uppercase mb-3">
+      Datos del cliente
+    </p>
+    <div class="grid grid-cols-2 gap-3 mb-6">
+      <div class="bg-creamdk border-2 border-brownlt px-4 py-3">
+        <div class="font-roblox text-sm text-brownlt mb-1">👤 NOMBRE</div>
+        <div class="font-fredoka text-xl font-semibold text-dark">
+          {{ pedido.cliente.nombre }}
+        </div>
+      </div>
+      <div class="bg-creamdk border-2 border-brownlt px-4 py-3">
+        <div class="font-roblox text-sm text-brownlt mb-1">📞 TELÉFONO</div>
+        <div class="font-fredoka text-xl text-dark">
+          {{ pedido.cliente.telefono }}
+        </div>
+      </div>
+      <div class="bg-creamdk border-2 border-brownlt px-4 py-3 col-span-2">
+        <div class="font-roblox text-sm text-brownlt mb-1">📍 DIRECCIÓN</div>
+        <div class="font-fredoka text-xl text-dark">
+          {{ pedido.cliente.direccion }}
+        </div>
+      </div>
+      <div class="bg-creamdk border-2 border-brownlt px-4 py-3">
+        <div class="font-roblox text-sm text-brownlt mb-1">🕐 HORA</div>
+        <div class="font-fredoka text-xl text-dark">
+          {{ pedido.fecha.strftime('%H:%M:%S') }}
+        </div>
+      </div>
+      <div class="bg-creamdk border-2 border-brownlt px-4 py-3">
+        <div class="font-roblox text-sm text-brownlt mb-1">📅 FECHA</div>
+        <div class="font-fredoka text-xl text-dark">
+          {{ pedido.fecha.strftime('%d/%m/%Y')}}
+        </div>
+      </div>
+    </div>
+
+    <!-- Pizzas -->
+    <p class="font-roblox text-sm text-brownlt uppercase mb-3">
+      Pizzas incluidas
+    </p>
+    {% if detalles %}
+    <table class="w-full font-fredoka text-base border-collapse mb-5">
+      <thead>
+        <tr>
+          {% for col in ['TAMAÑO','INGREDIENTES','CANT.','P.UNIT','SUBTOTAL'] %}
+          <th
+            class="font-roblox text-sm text-cream text-left px-3 py-2 bg-brownlt border-2 border-brown"
+          >
+            {{ col }}
+          </th>
+          {% endfor %}
+        </tr>
+      </thead>
+      <tbody>
+        {% for d in detalles %}
+        <tr
+          class="{{ 'bg-creamdk' if loop.index is even else 'bg-panel' }} hover:bg-paneldk"
+        >
+          <td class="px-3 py-2 border border-paneldk">
+            <span
+              class="font-roblox text-xs bg-red text-cream border-2 border-brown px-2 py-1"
+            >
+              {{ d.pizza.tamanio }}
+            </span>
+          </td>
+          <td class="px-3 py-2 border border-paneldk text-brownlt text-sm">
+            {{ d.pizza.ingredientes }}
+          </td>
+          <td class="px-3 py-2 border border-paneldk text-center font-bold">
+            × {{ d.cantidad }}
+          </td>
+          <td class="px-3 py-2 border border-paneldk text-brownlt">
+            ${{ d.pizza.precio|int }}
+          </td>
+          <td
+            class="px-3 py-2 border border-paneldk text-red font-bold text-lg"
+          >
+            ${{ d.subtotal|int }}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% endif %}
+
+    <!-- Total -->
+    <div class="flex justify-end pt-4 border-t-4 border-dashed border-brownlt">
+      <div class="text-right">
+        <div class="font-roblox text-sm text-brownlt mb-2 uppercase">
+          Total a pagar
+        </div>
+        <div
+          class="font-roblox text-2xl bg-sign text-brown border-4 border-brown px-6 py-3 inline-block"
+          style="box-shadow: var(--shadow-sign)"
+        >
+          ${{ pedido.total|int }}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
